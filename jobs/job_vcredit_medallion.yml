@@ -1,0 +1,31 @@
+resources:
+  jobs:
+    New_Job_2026_10_28_20_07_30:
+      name: New Job 2026-10-28 20:07:30
+      schedule:
+        quartz_cron_expression: 0 0 8 * * ?
+        timezone_id: America/Sao_Paulo
+        pause_status: UNPAUSED
+      tasks:
+        - task_key: 01_bronze
+          notebook_task:
+            notebook_path: /Workspace/Users/patrickabergmann@usp.br/Case SP
+              Final/01_Ingestao_Bronze (2)
+            source: WORKSPACE
+        - task_key: 02_silver
+          depends_on:
+            - task_key: 01_bronze
+          notebook_task:
+            notebook_path: /Workspace/Users/patrickabergmann@usp.br/Case SP
+              Final/02_Bronze_To_Silver (1)
+            source: WORKSPACE
+        - task_key: 03_gold
+          depends_on:
+            - task_key: 02_silver
+          notebook_task:
+            notebook_path: /Workspace/Users/patrickabergmann@usp.br/Case SP
+              Final/03_silver_to_gold_bruno (2)
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
