@@ -1,6 +1,6 @@
 # Grupo01-Case-RocketLab
 
-Projeto desenvolvido pelo Grupo 01 no Rocket Lab 2026, a partir do case de atendimento da V-Credit. Organizamos as bases em uma arquitetura medalhão para tratar as inconsistências, integrar as informações e preparar os dados para análise.
+Projeto desenvolvido pelo nosso Grupo 01 no Rocket Lab 2026, a partir do case de atendimento da V-Credit. Organizamos as bases em uma arquitetura medalhão para tratar as inconsistências, integrar as informações e preparar os dados para análise.
 
 O processamento foi desenvolvido no Databricks Free Edition, com Python, PySpark, SQL e tabelas Delta. O período analisado é de janeiro de 2025 a julho de 2026.
 
