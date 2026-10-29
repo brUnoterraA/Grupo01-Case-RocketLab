@@ -14,8 +14,8 @@ O processamento foi desenvolvido no Databricks Free Edition, com Python, PySpark
 | [03_Silver_To_Gold.ipynb](03_Silver_To_Gold.ipynb) | Construção das cinco dimensões e da fato de chamados. |
 | [04_Views.ipynb](04_Views.ipynb) | View que reúne os dados da Gold para o painel e as simulações de custo. |
 | [05_Teste_De_Idempotência.ipynb](05_Teste_De_Idempot%C3%AAncia.ipynb) | Comparação entre duas execuções completas do pipeline, com o resultado do teste. |
-| [jobs/job_vcredit_medallion.yml](jobs/job_vcredit_medallion.yml) | Configuração do Job, dependências e agendamento. |
-| [evidencias/](evidencias/) | Capturas do fluxo, do histórico de execuções e do agendamento. |
+| [jobs/job_vcredit_medallion.yml](Jobs/job_vcredit_medallion.yml) | Configuração do Job, dependências e agendamento. |
+| [evidencias/](Evidências/) | Capturas do fluxo, do histórico de execuções e do agendamento. |
 | [V-Credit Central de Atendimento.pdf](V-Credit%20Central%20de%20Atendimento.pdf) | Exportação visual do painel de atendimento. |
 
 ## Arquitetura
