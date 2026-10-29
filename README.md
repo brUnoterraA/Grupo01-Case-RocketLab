@@ -173,5 +173,3 @@ Na pasta `07_Evidências`, foram organizadas as capturas do fluxo Bronze → Sil
 O material do case é confidencial e destinado às atividades do Rocket Lab. O acesso ao repositório, ao Workspace e às bases deve ficar restrito às pessoas autorizadas no processo.
 
 Os notebooks de Landing, Bronze e Silver foram disponibilizados sem as saídas das células, para evitar a exposição de nomes, CPFs e e-mails nas amostras. O notebook de idempotência mantém o relatório agregado das verificações.
-
-As surrogate keys organizam os relacionamentos do modelo; seu uso não significa anonimização das bases. Identificadores e outros campos pessoais ainda existem em tabelas e na view, e precisam de controle de acesso no Databricks. Retirar as saídas dos notebooks também não apaga versões anteriores do histórico do Git.
