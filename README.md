@@ -70,24 +70,13 @@ O Job recorrente executa somente **Bronze → Silver → Gold**. A preparação 
 
 As tabelas são gravadas por `overwrite`, considerando os CSVs como a entrada completa da carga. A solução não implementa ingestão incremental. Na Gold, o recorte continua sendo o período do case: de 01/01/2025 a 31/07/2026.
 
-## Painel e simulações de ganho
+## Painel de atendimento
 
 O notebook `04_Views/04_Views.ipynb` cria a view `vcredit_medallion.gold.vw_dashboard_chamados`, que reúne a fato e as dimensões para apoiar o painel e as simulações de custo. O arquivo [04_Views/V-Credit Central de Atendimento.pdf](04_Views/V-Credit%20Central%20de%20Atendimento.pdf) apresenta a versão visual do painel. O PDF não inclui a configuração editável dos gráficos.
 
 As views comuns consultam os dados atuais das tabelas. Sua definição precisa ser executada na preparação do ambiente e quando o código da view mudar. A atualização visual do dashboard depende de uma atualização das consultas do próprio painel; ela não é uma tarefa do Job Bronze → Silver → Gold.
 
-Os custos médios usados na simulação são calculados a partir dos registros com custo disponível na Gold. Os percentuais abaixo são hipóteses adotadas pelo grupo para construir o cenário, e não resultados medidos em uma implantação:
-
-| Parâmetro | Hipótese usada |
-| --- | --- |
-| `taxa_auto = 70%` | Parcela dos chamados humanos classificados como totalmente automatizáveis que migraria para autosserviço. Os demais manteriam o custo atual. |
-| `taxa_validacao = 50%` | Parcela dos chamados humanos classificados como automação com validação humana que migraria para o fluxo proposto. |
-| `split_auto_validacao = 70%` e `split_n1_validacao = 30%` | Composição do custo dos chamados migrados no cenário de validação: 70% com custo médio de autosserviço e 30% com custo médio do atendimento inicial. |
-| `ganho_produtividade = 12%` | Redução hipotética aplicada diretamente ao custo dos chamados classificados como atendimento humano. |
-
-A classificação dos motivos por possibilidade de automação também faz parte da proposta e deve ser validada com as equipes responsáveis. Chamados que já estão em autosserviço mantêm o custo atual, e custos ausentes permanecem nulos.
-
-O ganho projetado é a diferença entre o custo atual e o simulado, no período analisado. Representa potencial bruto, sem descontar investimentos de implantação ou manutenção. Sua conversão em economia financeira depende da possibilidade de reduzir despesas ou aproveitar a capacidade liberada. Antes de adotar metas, propomos validar as hipóteses em um piloto, acompanhando migração, resolução, recontato, satisfação e custo.
+As premissas e limitações das simulações de custo estão documentadas no notebook de views.
 
 ## Decisões de tratamento
 
