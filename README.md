@@ -14,8 +14,8 @@ O processamento foi desenvolvido no Databricks Free Edition, com Python, PySpark
 | [03_Silver_To_Gold.ipynb](03_Silver_To_Gold.ipynb) | Construção das cinco dimensões e da fato de chamados. |
 | [04_Views.ipynb](04_Views.ipynb) | View que reúne os dados da Gold para o painel e as simulações de custo. |
 | [05_Teste_De_Idempotência.ipynb](05_Teste_De_Idempot%C3%AAncia.ipynb) | Comparação entre duas execuções completas do pipeline, com o resultado do teste. |
-| [jobs/job_vcredit_medallion.yml](Jobs/job_vcredit_medallion.yml) | Configuração do Job, dependências e agendamento. |
-| [evidencias/](Evidências/) | Capturas do fluxo, do histórico de execuções e do agendamento. |
+| [07_Jobs/job_vcredit_medallion.yml](07_Jobs/job_vcredit_medallion.yml) | Configuração do Job, dependências e agendamento. |
+| [06_Evidências/](06_Evid%C3%AAncias/) | Capturas do fluxo, do histórico de execuções e do agendamento. |
 | [V-Credit Central de Atendimento.pdf](V-Credit%20Central%20de%20Atendimento.pdf) | Exportação visual do painel de atendimento. |
 
 ## Arquitetura
@@ -132,7 +132,7 @@ O Job tem três tarefas em sequência:
 
 O agendamento está ativo para execução diária às **08h**, no fuso **America/Sao_Paulo**, com a expressão Quartz `0 0 8 * * ?`.
 
-Foi registrada uma execução iniciada pelo agendador em 29/10/2026, às 08h, concluída com sucesso nas três tarefas. As capturas estão na pasta `evidencias`.
+Foi registrada uma execução iniciada pelo agendador em 29/10/2026, às 08h, concluída com sucesso nas três tarefas. As capturas estão na pasta `06_Evidências`.
 
 ### Ajuste em outro Workspace
 
@@ -173,7 +173,7 @@ No ensaio realizado com a premissa atualizada, as **22 tabelas foram aprovadas**
 
 ## Evidências
 
-Na pasta `evidencias`, foram organizadas as capturas do fluxo Bronze → Silver → Gold, do histórico de execuções e do agendamento ativo. O relatório das 22 tabelas aprovadas está incluído nas saídas do notebook 05.
+Na pasta `06_Evidências`, foram organizadas as capturas do fluxo Bronze → Silver → Gold, do histórico de execuções e do agendamento ativo. O relatório das 22 tabelas aprovadas está incluído nas saídas do notebook 05.
 
 ## Uso dos dados
 
