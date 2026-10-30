@@ -12,11 +12,11 @@ O processamento foi desenvolvido no Databricks Free Edition, com Python, PySpark
 | [01_Ingestao_Bronze.ipynb](01_Ingestao_Bronze.ipynb) | Leitura dos CSVs e gravação das oito tabelas Bronze. |
 | [02_Bronze_To_Silver.ipynb](02_Bronze_To_Silver.ipynb) | Tratamentos e validações das oito tabelas Silver, reunidos em um notebook. |
 | [03_Silver_To_Gold.ipynb](03_Silver_To_Gold.ipynb) | Construção das cinco dimensões e da fato de chamados. |
-| [04_Views/04_Views.ipynb](04_Views/04_Views.ipynb) | View que reúne os dados da Gold para o painel e as simulações de custo. |
+| [04_Views.ipynb](04_Views.ipynb) | View que reúne os dados da Gold para o painel e as simulações de custo. |
 | [05_Teste_De_Idempotência.ipynb](05_Teste_De_Idempot%C3%AAncia.ipynb) | Comparação entre duas execuções completas do pipeline, com o resultado do teste. |
-| [06_Jobs/job_vcredit_medallion.yml](06_Jobs/job_vcredit_medallion.yml) | Configuração do Job, dependências e agendamento. |
-| [07_Evidências/](07_Evid%C3%AAncias/) | Capturas do fluxo, do histórico de execuções e do agendamento. |
-| [04_Views/V-Credit Central de Atendimento.pdf](04_Views/V-Credit%20Central%20de%20Atendimento.pdf) | Exportação visual do painel de atendimento. |
+| [07_Jobs/job_vcredit_medallion.yml](07_Jobs/job_vcredit_medallion.yml) | Configuração do Job, dependências e agendamento. |
+| [06_Evidências/](06_Evid%C3%AAncias/) | Capturas do fluxo, do histórico de execuções e do agendamento. |
+| [V-Credit Central de Atendimento.pdf](V-Credit%20Central%20de%20Atendimento.pdf) | Exportação visual do painel de atendimento. |
 
 ## Arquitetura
 
@@ -63,20 +63,31 @@ Os arquivos fornecidos com o case devem ser obtidos pelos canais do programa. As
 2. Execute `01_Ingestao_Bronze`.
 3. Execute `02_Bronze_To_Silver`.
 4. Execute `03_Silver_To_Gold`.
-5. Execute o notebook `04_Views/04_Views.ipynb` para criar ou atualizar a definição da view.
+5. Execute `04_Views` para criar ou atualizar as definições das views.
 6. Execute o notebook 05 separadamente, seguindo o procedimento de idempotência abaixo.
 
-O Job recorrente executa somente **Bronze → Silver → Gold**. A preparação e inspeção da Landing, a criação da view e o teste de idempotência são executados separadamente. A ingestão dos CSVs nas tabelas já acontece na Bronze. A disponibilização de novos arquivos na Landing é manual; o Job não busca arquivos no computador dos integrantes.
+O Job recorrente executa somente **Bronze → Silver → Gold**. A ingestão dos CSVs nas tabelas já acontece na Bronze. A disponibilização de novos arquivos na Landing é manual; o Job não busca arquivos no computador dos integrantes.
 
 As tabelas são gravadas por `overwrite`, considerando os CSVs como a entrada completa da carga. A solução não implementa ingestão incremental. Na Gold, o recorte continua sendo o período do case: de 01/01/2025 a 31/07/2026.
 
-## Painel de atendimento
+## Painel e simulações de ganho
 
-O notebook `04_Views/04_Views.ipynb` cria a view `vcredit_medallion.gold.vw_dashboard_chamados`, que reúne a fato e as dimensões para apoiar o painel e as simulações de custo. O arquivo [04_Views/V-Credit Central de Atendimento.pdf](04_Views/V-Credit%20Central%20de%20Atendimento.pdf) apresenta a versão visual do painel. O PDF não inclui a configuração editável dos gráficos.
+O notebook `04_Views` cria a view `vcredit_medallion.gold.vw_dashboard_chamados`, que reúne a fato e as dimensões para apoiar o painel e as simulações de custo. O arquivo [V-Credit Central de Atendimento.pdf](V-Credit%20Central%20de%20Atendimento.pdf) apresenta a versão visual do painel. O PDF não inclui a configuração editável dos gráficos.
 
 As views comuns consultam os dados atuais das tabelas. Sua definição precisa ser executada na preparação do ambiente e quando o código da view mudar. A atualização visual do dashboard depende de uma atualização das consultas do próprio painel; ela não é uma tarefa do Job Bronze → Silver → Gold.
 
-As premissas e limitações das simulações de custo estão documentadas no notebook de views.
+Os custos médios usados na simulação são calculados a partir dos registros com custo disponível na Gold. Os percentuais abaixo são hipóteses adotadas pelo grupo para construir o cenário, e não resultados medidos em uma implantação:
+
+| Parâmetro | Hipótese usada |
+| --- | --- |
+| `taxa_auto = 70%` | Parcela dos chamados humanos classificados como totalmente automatizáveis que migraria para autosserviço. Os demais manteriam o custo atual. |
+| `taxa_validacao = 50%` | Parcela dos chamados humanos classificados como automação com validação humana que migraria para o fluxo proposto. |
+| `split_auto_validacao = 70%` e `split_n1_validacao = 30%` | Composição do custo dos chamados migrados no cenário de validação: 70% com custo médio de autosserviço e 30% com custo médio do atendimento inicial. |
+| `ganho_produtividade = 12%` | Redução hipotética aplicada diretamente ao custo dos chamados classificados como atendimento humano. |
+
+A classificação dos motivos por possibilidade de automação também faz parte da proposta e deve ser validada com as equipes responsáveis. Chamados que já estão em autosserviço mantêm o custo atual, e custos ausentes permanecem nulos.
+
+O ganho projetado é a diferença entre o custo atual e o simulado, no período analisado. Representa potencial bruto, sem descontar investimentos de implantação ou manutenção. Sua conversão em economia financeira depende da possibilidade de reduzir despesas ou aproveitar a capacidade liberada. Antes de adotar metas, propomos validar as hipóteses em um piloto, acompanhando migração, resolução, recontato, satisfação e custo.
 
 ## Decisões de tratamento
 
@@ -113,19 +124,15 @@ Os alertas de qualidade, como notas ausentes, divergências de horários e clien
 
 O Job tem três tarefas em sequência:
 
-| Tarefa | Nome do notebook no Workspace utilizado | Arquivo correspondente no repositório |
-| --- | --- | --- |
-| `01_bronze` | `01_Ingestao_Bronze` | `01_Ingestao_Bronze.ipynb` |
-| `02_silver` | `02_Bronze_To_Silver` | `02_Bronze_To_Silver.ipynb` |
-| `03_gold` | `03_silver_to_gold_bruno` | `03_Silver_To_Gold.ipynb` |
-
-A Silver depende do sucesso da Bronze, e a Gold depende do sucesso da Silver. O YAML está em [06_Jobs/job_vcredit_medallion.yml](06_Jobs/job_vcredit_medallion.yml).
-
-No ambiente utilizado, os caminhos do YAML apontam para os notebooks da pasta `Case SP Final`. O nome `03_silver_to_gold_bruno` no Workspace pode ser diferente de `03_Silver_To_Gold.ipynb` no GitHub; o importante é que o caminho selecionado no Job exista e contenha a versão final do código. Renomear ou mover um arquivo no GitHub não altera esse caminho automaticamente.
+| Tarefa | Notebook |
+| --- | --- |
+| `01_bronze` | `01_Ingestao_Bronze` |
+| `02_silver` | `02_Bronze_To_Silver`, após o sucesso da Bronze |
+| `03_gold` | `03_Silver_To_Gold`, após o sucesso da Silver |
 
 O agendamento está ativo para execução diária às **08h**, no fuso **America/Sao_Paulo**, com a expressão Quartz `0 0 8 * * ?`.
 
-Foi registrada uma execução iniciada pelo agendador em 29/10/2026, às 08h, concluída com sucesso nas três tarefas. As capturas estão na pasta `07_Evidências`.
+Foi registrada uma execução iniciada pelo agendador em 29/10/2026, às 08h, concluída com sucesso nas três tarefas. As capturas estão na pasta `06_Evidências`.
 
 ### Ajuste em outro Workspace
 
@@ -166,10 +173,18 @@ No ensaio realizado com a premissa atualizada, as **22 tabelas foram aprovadas**
 
 ## Evidências
 
-Na pasta `07_Evidências`, foram organizadas as capturas do fluxo Bronze → Silver → Gold, do histórico de execuções e do agendamento ativo. O relatório das 22 tabelas aprovadas está incluído nas saídas do notebook 05.
+Na pasta `06_Evidências`, foram organizadas as capturas do fluxo Bronze → Silver → Gold, do histórico de execuções e do agendamento ativo. O relatório das 22 tabelas aprovadas está incluído nas saídas do notebook 05.
 
 ## Uso dos dados
 
 O material do case é confidencial e destinado às atividades do Rocket Lab. O acesso ao repositório, ao Workspace e às bases deve ficar restrito às pessoas autorizadas no processo.
 
 Os notebooks de Landing, Bronze e Silver foram disponibilizados sem as saídas das células, para evitar a exposição de nomes, CPFs e e-mails nas amostras. O notebook de idempotência mantém o relatório agregado das verificações.
+
+As surrogate keys organizam os relacionamentos do modelo; seu uso não significa anonimização das bases. Identificadores e outros campos pessoais ainda existem em tabelas e na view, e precisam de controle de acesso no Databricks. Retirar as saídas dos notebooks também não apaga versões anteriores do histórico do Git.
+
+## Link úteis
+
+[Acesse a apresentação](https://docs.google.com/presentation/d/1mszwYCT6yabZhGNjqJ65GgNQf0Ny6Zoh/edit?usp=sharing&ouid=108881579198954051716&rtpof=true&sd=true)
+
+[Acesse o DashBoard](https://dbc-09d1035c-bcbd.cloud.databricks.com/dashboardsv3/01f1d34595f91018a568fb7210761478/published?o=7474651719749888)
