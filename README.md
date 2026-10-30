@@ -12,11 +12,10 @@ O processamento foi desenvolvido no Databricks Free Edition, com Python, PySpark
 | [01_Ingestao_Bronze.ipynb](01_Ingestao_Bronze.ipynb) | Leitura dos CSVs e gravação das oito tabelas Bronze. |
 | [02_Bronze_To_Silver.ipynb](02_Bronze_To_Silver.ipynb) | Tratamentos e validações das oito tabelas Silver, reunidos em um notebook. |
 | [03_Silver_To_Gold.ipynb](03_Silver_To_Gold.ipynb) | Construção das cinco dimensões e da fato de chamados. |
-| [04_Views.ipynb](04_Views.ipynb) | View que reúne os dados da Gold para o painel e as simulações de custo. |
+| [04_Views/](04_Views/) | Notebook 04_Views.ipynb, com a view que reúne os dados da Gold para o painel, e o PDF V-Credit_ Central de Atendimento.pdf, com a exportação visual de painel. |
 | [05_Teste_De_Idempotência.ipynb](05_Teste_De_Idempot%C3%AAncia.ipynb) | Comparação entre duas execuções completas do pipeline, com o resultado do teste. |
-| [07_Jobs/job_vcredit_medallion.yml](07_Jobs/job_vcredit_medallion.yml) | Configuração do Job, dependências e agendamento. |
-| [06_Evidências/](06_Evid%C3%AAncias/) | Capturas do fluxo, do histórico de execuções e do agendamento. |
-| [V-Credit Central de Atendimento.pdf](V-Credit%20Central%20de%20Atendimento.pdf) | Exportação visual do painel de atendimento. |
+| [06_Jobs/job_vcredit_medallion.yml](06_Jobs/job_vcredit_medallion.yml) | Configuração do Job, dependências e agendamento. |
+| [07_Evidências/](07_Evid%C3%AAncias/) | Capturas do fluxo, do histórico de execuções e do agendamento. |
 
 ## Arquitetura
 
